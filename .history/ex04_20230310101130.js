@@ -1,0 +1,1 @@
+const json = '{"result":true, "count":42 }'
