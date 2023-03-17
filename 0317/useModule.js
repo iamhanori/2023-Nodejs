@@ -1,4 +1,4 @@
-const { text_odd, text_even } = require("./moduleTest");
+const { text_odd, text_even } = require("./moduleText");
 const checkNumberFunc = require("./moduleFunc");
 
 function checkStringOddOrEven(str) {
