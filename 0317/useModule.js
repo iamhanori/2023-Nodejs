@@ -11,4 +11,4 @@ function checkStringOddOrEven(str) {
 console.log("useModule : ", checkNumberFunc(10));
 console.log("useModule : ", checkStringOddOrEven('hello'));
 
-module.exports = [checkStringOddOrEven, checkNumberFunc];
+module.exports = [checkStringOddOrEven, checkNumberFunc, text_odd, text_even];
