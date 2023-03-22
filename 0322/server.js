@@ -9,11 +9,11 @@ server = http.createServer((req, res) => {
 
 server.listen(8088);
 // 이벤트 on
-sever.on('listening', () => {
+server.on('listening', () => {
     console.log("8088번 포트에서 서버가 대기 중입니다.")
 });
 
-sever.on('error', (error) => {
+server.on('error', (error) => {
     console.log(error);
 });
 
