@@ -2,9 +2,18 @@
 
 const http = require('http');
 
-http.createServer((req, res) => {
+server = http.createServer((req, res) => {
     res.write("<h1> Hello Ndoe</h1>");
     res.end("<p>hello server</p>");
-}).listen(8088,() => {
+})
+
+server.listen(8088);
+// 이벤트 on
+sever.on('listening', () => {
     console.log("8088번 포트에서 서버가 대기 중입니다.")
 });
+
+sever.on('error', (error) => {
+    console.log(error);
+});
+
