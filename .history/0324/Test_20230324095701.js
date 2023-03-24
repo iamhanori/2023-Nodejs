@@ -50,7 +50,7 @@ const server4 = http.createServer();
 server4.on('request', (req, res) => {
     fs.readFile("./BADKID.mp4", (err, data) => {
         // 강제 페이지 이동구현
-        res.writeHead(302, {'Location':'http://naver.com'});
+        res.writeHead(302, {'Content-Type':'http://naver.com'});
         res.end(data);
     });
 });
