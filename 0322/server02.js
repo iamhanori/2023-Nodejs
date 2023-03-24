@@ -1,17 +1,19 @@
 // 노드 서버 파일로 읽어서 가져오기
 
 const http = require('http');
-const fs = require('fs');
+const fs = require('fs').promises;
 
-const server = http.createServer((req, res) => {
-    fs.readFile("./server2_html.html", (err, data) => {
-        if(err) {
-            throw err;
-        }
-        res.statusCode = 200; // 성공코드
-        res.setHeader("Content-Type", "text/html");
+const server = http.createServer(async (req, res)=>{
+    try{
+        const data = await fs.readFile(".server2.html");
+        res.writeHead(500, {'Content-Type' : 'text/plain;Charset=utf-8'});
         res.end(data);
-    });
+    }catch(err) {
+        console.log(err);
+        res.writeHead(500, {'Content-Type' : 'text/plain;Charset=utf-8'});
+        res.end(err.message);
+    }
+
 });
 
 server.listen(8088);
