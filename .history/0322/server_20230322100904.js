@@ -10,7 +10,7 @@ server = http.createServer((req, res) => {
 server.listen(8088);
 // 이벤트 on
 server.on('listening', () => {
-    console.log("8088번 포트에서 서버가 대기 중입니다.");
+    console.log("8088번 포트에서 서버가 대기 중입니다.")
 });
 
 server.on('error', (error) => {
