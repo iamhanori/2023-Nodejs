@@ -38,30 +38,29 @@ const server = http.createServer(async (req, res) => {
         console.log("searchParams", searchParams);
 
         const param_date = searchParams.get("date") || "null";
-        let fileDate = await fs.readFile(fileName);
         const fileName = path.join(__dirname, `./textFile/menu_${param_date}.txt`);
-
-        let fileDataString = fileDate.toString().replace(/\r/g, '<br/>');
-        console.log("text : ", fileDataString);
+        let fileDate = await fs.readFile(fileName);
+        // let fileDataString  = fileData.toString().replace(/\r/g,'<br/>');
+        // console.log("text : ", fileDataString);
 
 
         const template = `
-        <!DOCTYPE html>
-        <html lang="en">
-            <head>
-                <meta charset="UTF-8">
-                <meta http-equiv="X-UA-Compatible" content="IE=edge">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>일정</title>
-            </head>
-            <body>
-                <h1><a href="/">일정</h1>
-                ${fileListText}
-                <br>
-                ${fileDataString}
-            </body>
-        </html>`
+<!DOCTYPE html>
 
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>일정</title>
+</head>
+<body>
+<h1><a href="/">일정</h1>
+${fileListText}
+<br>
+${fileDate}
+</body>
+</html>`
         res.writeHead(200, { 'Context-Type': 'text/html; charset=utf-8' });
         res.end(template);
 
