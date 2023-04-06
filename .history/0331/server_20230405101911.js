@@ -15,9 +15,9 @@ const server = http.createServer(async (req, res) => {
         }
 
         // // 지정된 폴더의 파일 리스트를 읽어와서 본문안에 넣기
-        const menuFolder = path.join(__dirname, './textFile');
-        console.log("내가 읽고 싶은 폴더 : ", menuFolder);
-        const filelist = fs.readdir(menuFolder);
+        // const menuFolder = path.join(__dirname, './textFile');
+        // console.log("내가 읽고 싶은 폴더 : ", menuFolder);
+        // const filelist = fs.readdir(menuFolder);
 
         // 요소 만들기
         let fileListText = '<ul>';
@@ -34,7 +34,7 @@ const server = http.createServer(async (req, res) => {
         //   console.log("log", fileListText);
         fileListText += '</ul>';
 
-        const searchParams = new URL(req.url, "http://localhost:8087").searchParams;
+        const searchParams = new URL(req.url, "http://localhost:8088").searchParams;
         console.log("searchParams", searchParams);
 
         const param_date = searchParams.get("date") || "null";
@@ -74,5 +74,5 @@ const server = http.createServer(async (req, res) => {
 server.listen(8087)
 server.on('listening', () => {
 
-    console.log("8087번 포트에서 서버가 대기 준비 입니다.");
+    console.log("8089번 포트에서 서버가 대기 준비 입니다.");
 });
