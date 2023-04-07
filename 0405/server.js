@@ -26,7 +26,7 @@ const server = http.createServer(async (req, res) => {
             console.log("file_list", file_list);
             while (ii < file_list.length) {
                 let dateData = file_list[ii].replace("menu_", "").replace(".txt", "");
-                fileListText += `<li><a href="./date=${dateData}">${dateData}<a></li>`;
+                fileListText += `<li><a href="./?date=${dateData}">${dateData}<a></li>`;
                 ii += 1;
             }
 
@@ -38,8 +38,10 @@ const server = http.createServer(async (req, res) => {
         console.log("searchParams", searchParams);
 
         const param_date = searchParams.get("date") || "null";
-        let fileDate = await fs.readFile(fileName);
         const fileName = path.join(__dirname, `./textFile/menu_${param_date}.txt`);
+        console.log(`./textFile/menu_${param_date}.txt`);
+        let fileDate = await fs.readFile(fileName);
+        
 
         let fileDataString = fileDate.toString().replace(/\r/g, '<br/>');
         console.log("text : ", fileDataString);
@@ -47,12 +49,19 @@ const server = http.createServer(async (req, res) => {
         // crud
         const pathname = url.parse(req.url, true).pathname;
         let subContent = "";
-        if(pathname == './create') {
+        let title = "";
+        if(pathname == '/create') {
             subContent = `<form action="create_process" method="post">
                             <p><input type="text" name="title" placeholder="title"/></p>
                             <p><textarea name="description" placeholder="description"></textarea></p>
                             <p><input type="submit"/></p>
                         </form>`
+        } else if(pathname == '/update') {
+            subContent = `<form action="update_process" method="post">
+            <p><input type="hidden" name="title" placeholder="title" value="${param_date}"/></p>
+            <p><textarea name="description" placeholder="description">${fileData}</textarea></p>
+            <p><input type="submit"/></p>
+        </form>`
         }
 
         const template = `
@@ -70,22 +79,64 @@ const server = http.createServer(async (req, res) => {
                 <br>
                 ${fileDataString}
                 <br>
-                <a href="create">create</a><a href="/update?id=${title}">update</a>
+                <a href="create">create</a>
+                <a href="/update?date=${param_date}">update</a>
                 ${subContent}
             </body>
-        </html>`
+        </html>`;
 
-        res.writeHead(200, { 'Context-Type': 'text/html; charset=utf-8' });
-        res.end(template);
 
+        if(pathname == '/create_process') {
+            let body = "";
+            req.on('data', function(data) {
+                body+=data;
+            });
+            req.on('end', function() {
+                const post = qs.parse(body);
+                const title = post.title; // 파일 제목
+                const description = post.description;
+                
+                fs.writeFile(path.join(__dirname, `./textFile/menu_${title}.txt`), description, 'utf-8', function(err) {});
+                console.log('내용', post);
+                
+                // 글 작성 후 해당 내용을 볼 수 있도록 링크 이동
+                res.writeHead(302, {location: `/?date=${encodeURIComponent(title)}`});
+                res.end();
+            });
+        } else if(pathname == '/update_process') {
+            let body = '';
+            req.on('data', function(data) {
+                body += body + data;
+            });
+            req.on('end', async function() {
+                const post = qs.parse(body);
+                const id = post.id;
+                const title = post.title;
+                const description = post.description;
+                await fs.rename(`textFile/menu_${id}.txt`, `textFile/menu_${title}.txt`);
+                await fs.rename(`textFile/menu_${title}.txt`, description, 'utf-8');
+                res.writeHead(302, {Location: `/?date${encodeURIComponent(title)}`});
+                res.end();
+            });
+        }
+        
+        
+        else {
+            res.writeHead(200, { 'Context-Type': 'text/html; charset=utf-8' });
+            res.end(template);
+        }
     } catch (err) {
         console.log(err);
         res.writeHead(500, { 'Context-Type': 'text/plain; charset=utf-8' })
         res.end(err.message);
     }
 });
+
+
+
+
 server.listen(8088)
 server.on('listening', () => {
 
-    console.log("8089번 포트에서 서버가 대기 준비 입니다.");
+    console.log("8088번 포트에서 서버가 대기 준비 입니다.");
 });
